@@ -2,4 +2,4 @@ steps:
 - name: 'docker'
   args: ['buildx', 'create', '--driver', 'docker-container', '--name', 'container', '--use']
 - name: 'docker'
-  args: ['buildx', 'build', '--platform', 'linux/amd64,linux/arm64', '-t', 'europe-west1-docker.pkg.dev/scary-frog/envoy-demo/api-client:v0.1', '--push', '.']
+  args: ['buildx', 'build', '--platform', 'linux/amd64,linux/arm64', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/envoy-demo/api-client:v0.1', '--push', '.']
