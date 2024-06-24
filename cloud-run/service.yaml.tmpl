@@ -1,0 +1,39 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: envoy-proxy-demo
+  annotations:
+    run.googleapis.com/launch-stage: BETA
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/execution-environment: gen2
+    spec:
+      serviceAccountName: $SA_EMAIL
+      containers:
+      - image: europe-west1-docker.pkg.dev/$PROJECT_ID/envoy-demo/envoy:v1.30
+        args:
+        - "-c"
+        - "/etc/envoy/cloudrun-envoy-demo.yaml"
+        - "-l"
+        - "info"
+        volumeMounts:
+        - name: envoy-config
+          mountPath: /etc/envoy
+          subPath: cloudrun-envoy-demo.yaml
+      - image: europe-west1-docker.pkg.dev/$PROJECT_ID/envoy-demo/api-client:v0.1
+        ports:
+        - containerPort: 5000
+        env:
+        - name: API_HOST
+          value: http://localhost:10000
+        - name: PROJECT_ID
+          value: $PROJECT_ID
+      volumes:
+      - name: envoy-config
+        csi:
+          driver: gcsfuse.run.googleapis.com
+          readOnly: true
+          volumeAttributes:
+            bucketName: $ENVOY_CONFIG_BUCKET

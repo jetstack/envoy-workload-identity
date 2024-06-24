@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Query Parameter Form</title>
+</head>
+<body>
+    <h1>Enter Query Parameters</h1>
+    <form method="POST">
+        <select name="api_option">
+            {% for i in api_options %}
+            <option value="{{ i.option }}">{{ i.display }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+    <h1>Response</h1>
+    <p>API URL: {{ api_url }}</p>
+    <pre>{{ response_text }}</pre>
+</body>
+</html>

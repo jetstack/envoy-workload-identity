@@ -1,0 +1,21 @@
+name: envoy-demo
+
+services:
+  metadata-server:
+    image: salrashid123/gcemetadataserver
+    ports:
+      - "8080:8080"
+    command: ["--serviceAccountFile", "/certs/sakey.json", "--configFile", "/config.json", "-logtostderr", "-alsologtostderr", "-v", "9", "-interface", "0.0.0.0"]
+    volumes:
+      -  $SA_KEY_PATH:/certs/sakey.json
+      -  ./config.json:/config.json
+
+  envoy:
+    image: $ENVOY_IMAGE
+    ports:
+    - "10000:10000"
+    - "8001:8001"
+    volumes:
+    - ./local-envoy-demo.yaml:/etc/envoy/envoy.yaml
+
+
